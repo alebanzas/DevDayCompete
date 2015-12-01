@@ -29,7 +29,7 @@ namespace DevDayKeynote
             var builder = new ConfigurationBuilder(appEnv.ApplicationBasePath)
                 .AddJsonFile("config.json")
                 .AddJsonFile($"config.{env.EnvironmentName}.json", optional: true);
-
+            
             if (env.IsDevelopment())
             {
                 // This reads the configuration keys from the secret store.
@@ -61,14 +61,14 @@ namespace DevDayKeynote
             // For more information see http://go.microsoft.com/fwlink/?LinkID=532715
             services.Configure<FacebookAuthenticationOptions>(options =>
             {
-                options.AppId = Configuration["Authentication:Facebook:AppId"];
-                options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+                options.AppId = Configuration["AppSettings:Authentication:Facebook:AppId"];
+                options.AppSecret = Configuration["AppSettings:Authentication:Facebook:AppSecret"];
             });
 
-            services.Configure<MicrosoftAccountAuthenticationOptions>(options =>
+            services.Configure<TwitterAuthenticationOptions>(options =>
             {
-                options.ClientId = Configuration["Authentication:MicrosoftAccount:ClientId"];
-                options.ClientSecret = Configuration["Authentication:MicrosoftAccount:ClientSecret"];
+                options.ConsumerKey = Configuration["AppSettings:Authentication:Twitter:ConsumerKey"];
+                options.ConsumerSecret = Configuration["AppSettings:Authentication:Twitter:ConsumerSecret"];
             });
 
             // Add MVC services to the services container.
@@ -93,18 +93,18 @@ namespace DevDayKeynote
             // Configure the HTTP request pipeline.
 
             // Add the following to the request pipeline only in development environment.
-            if (env.IsDevelopment())
-            {
+            //if (env.IsDevelopment())
+            //{
                 app.UseBrowserLink();
                 app.UseErrorPage();
                 app.UseDatabaseErrorPage(DatabaseErrorPageOptions.ShowAll);
-            }
-            else
-            {
-                // Add Error handling middleware which catches all application specific errors and
-                // sends the request to the following path or controller action.
-                app.UseErrorHandler("/Home/Error");
-            }
+            //}
+            //else
+            //{
+            //    // Add Error handling middleware which catches all application specific errors and
+            //    // sends the request to the following path or controller action.
+            //    app.UseErrorHandler("/Home/Error");
+            //}
 
             // Add static files to the request pipeline.
             app.UseStaticFiles();
@@ -114,10 +114,10 @@ namespace DevDayKeynote
 
             // Add authentication middleware to the request pipeline. You can configure options such as Id and Secret in the ConfigureServices method.
             // For more information see http://go.microsoft.com/fwlink/?LinkID=532715
-            // app.UseFacebookAuthentication();
+            app.UseFacebookAuthentication();
             // app.UseGoogleAuthentication();
             // app.UseMicrosoftAccountAuthentication();
-            // app.UseTwitterAuthentication();
+            app.UseTwitterAuthentication();
 
             // Add MVC to the request pipeline.
             app.UseMvc(routes =>
