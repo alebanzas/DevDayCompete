@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{CF9438C7-DE8C-473C-9E09-646E34713A05}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{74B9F182-0EA4-411A-8EAF-21AFED75457A}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+		NuGet.Config = NuGet.Config
+	EndProjectSection
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "DevDayKeynote", "src\DevDayKeynote\DevDayKeynote.xproj", "{9E31B7CB-AC77-441E-96B0-2F94D0923104}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9E31B7CB-AC77-441E-96B0-2F94D0923104}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E31B7CB-AC77-441E-96B0-2F94D0923104}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E31B7CB-AC77-441E-96B0-2F94D0923104}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E31B7CB-AC77-441E-96B0-2F94D0923104}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9E31B7CB-AC77-441E-96B0-2F94D0923104} = {CF9438C7-DE8C-473C-9E09-646E34713A05}
+	EndGlobalSection
+EndGlobal
