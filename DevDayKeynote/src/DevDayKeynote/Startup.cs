@@ -93,18 +93,18 @@ namespace DevDayKeynote
             // Configure the HTTP request pipeline.
 
             // Add the following to the request pipeline only in development environment.
-            //if (env.IsDevelopment())
-            //{
+            if (env.IsDevelopment())
+            {
                 app.UseBrowserLink();
                 app.UseErrorPage();
                 app.UseDatabaseErrorPage(DatabaseErrorPageOptions.ShowAll);
-            //}
-            //else
-            //{
-            //    // Add Error handling middleware which catches all application specific errors and
-            //    // sends the request to the following path or controller action.
-            //    app.UseErrorHandler("/Home/Error");
-            //}
+            }
+            else
+            {
+                // Add Error handling middleware which catches all application specific errors and
+                // sends the request to the following path or controller action.
+                app.UseErrorHandler("/Home/Error");
+            }
 
             // Add static files to the request pipeline.
             app.UseStaticFiles();
