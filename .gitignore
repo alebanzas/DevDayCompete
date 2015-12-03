@@ -48,3 +48,4 @@ Temporary Items
 *.user
 *.suo
 DevDayKeynote/.vs/config/applicationhost.config
+*.user

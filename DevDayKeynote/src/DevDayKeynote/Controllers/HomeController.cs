@@ -13,20 +13,19 @@ namespace DevDayKeynote.Controllers
             return View();
         }
 
-        public IActionResult About()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="c">comunidad</param>
+        /// <param name="u">usuario</param>
+        /// <returns></returns>
+        public IActionResult Vote(string c, string u)
         {
-            ViewData["Message"] = "Your application description page.";
+
 
             return View();
         }
-
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
-        }
-
+        
         public IActionResult Error()
         {
             return View("~/Views/Shared/Error.cshtml");
