@@ -1,23 +1,24 @@
-﻿@{
+﻿@using System.Security.Claims
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="row">
     <div class="col-md-6">
-        <a href="/Home/Vote/?c=NET&u=alebanzas" class="comm btn btn-default">.NET</a>
+        <a href="/Home/Vote/?c=NET&u=@User.GetUserName()" class="comm btn btn-default">.NET</a>
     </div>
     <div class="col-md-6">
-        <a href="/Home/Vote/?c=Java&u=alebanzas" class="comm btn btn-default">Java</a>
+        <a href="/Home/Vote/?c=Java&u=@User.GetUserName()" class="comm btn btn-default">Java</a>
     </div>
 </div>
 
 
 <div class="row">
     <div class="col-md-6">
-        <a href="/Home/Vote/?c=Javascript&u=alebanzas" class="comm btn btn-default">Javascript</a>
+        <a href="/Home/Vote/?c=Javascript&u=@User.GetUserName()" class="comm btn btn-default">Javascript</a>
     </div>
     <div class="col-md-6">
-        <a href="/Home/Vote/?c=PHP&u=alebanzas" class="comm btn btn-default">PHP</a>
+        <a href="/Home/Vote/?c=PHP&u=@User.GetUserName()" class="comm btn btn-default">PHP</a>
     </div>
 </div>
 

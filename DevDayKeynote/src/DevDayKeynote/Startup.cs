@@ -66,6 +66,7 @@ namespace DevDayKeynote
             {
                 options.AppId = Configuration["AppSettings:Authentication:Facebook:AppId"];
                 options.AppSecret = Configuration["AppSettings:Authentication:Facebook:AppSecret"];
+                options.Scope.Add("email");
             });
 
             services.Configure<TwitterAuthenticationOptions>(options =>

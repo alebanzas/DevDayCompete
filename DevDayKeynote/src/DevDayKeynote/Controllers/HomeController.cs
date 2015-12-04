@@ -1,9 +1,7 @@
 ﻿using System.Threading.Tasks;
 using DevDayKeynote.Models;
-using Microsoft.AspNet.Http;
+using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
-using Microsoft.Framework.Configuration;
-using Microsoft.Framework.OptionsModel;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
 
@@ -20,6 +18,7 @@ namespace DevDayKeynote.Controllers
             MessageQueue = createCloudQueueClient.GetQueueReference(typeof(Voto).Name.ToLowerInvariant());
         }
 
+        [Authorize]
         public IActionResult Index()
         {
             return View();
@@ -31,6 +30,7 @@ namespace DevDayKeynote.Controllers
         /// <param name="c">comunidad</param>
         /// <param name="u">usuario</param>
         /// <returns></returns>
+        [Authorize]
         public async Task<IActionResult> Vote(string c, string u)
         {
             var voto = new Voto
