@@ -17,6 +17,9 @@ using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
 using DevDayKeynote.Models;
 using DevDayKeynote.Services;
+using Microsoft.Framework.Configuration.EnvironmentVariables;
+using Microsoft.WindowsAzure.Storage;
+using LogLevel = Microsoft.Framework.Logging.LogLevel;
 
 namespace DevDayKeynote
 {
@@ -40,7 +43,7 @@ namespace DevDayKeynote
             Configuration = builder.Build();
         }
 
-        public IConfigurationRoot Configuration { get; set; }
+        public static IConfigurationRoot Configuration { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -55,7 +58,7 @@ namespace DevDayKeynote
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
-
+            
             // Configure the options for the authentication middleware.
             // You can add options for Google, Twitter and other middleware as shown below.
             // For more information see http://go.microsoft.com/fwlink/?LinkID=532715
@@ -111,6 +114,11 @@ namespace DevDayKeynote
 
             // Add cookie-based authentication to the request pipeline.
             app.UseIdentity();
+
+            var cloudStorageAccount = CloudStorageAccount.Parse(Configuration["AppSettings:StorageConnectionString"]);
+            var createCloudQueueClient = cloudStorageAccount.CreateCloudQueueClient();
+            var queue = createCloudQueueClient.GetQueueReference(typeof(Voto).Name.ToLowerInvariant());
+            queue.CreateIfNotExistsAsync();
 
             // Add authentication middleware to the request pipeline. You can configure options such as Id and Secret in the ConfigureServices method.
             // For more information see http://go.microsoft.com/fwlink/?LinkID=532715

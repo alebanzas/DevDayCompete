@@ -4,20 +4,20 @@
 
 <div class="row">
     <div class="col-md-6">
-        <button href="/Home/Vote/?c=NET&u=alebanzas" class="comm btn btn-default">.NET</button>
+        <a href="/Home/Vote/?c=NET&u=alebanzas" class="comm btn btn-default">.NET</a>
     </div>
     <div class="col-md-6">
-        <button href="/Home/Vote/?c=Java&u=alebanzas" class="comm btn btn-default">Java</button>
+        <a href="/Home/Vote/?c=Java&u=alebanzas" class="comm btn btn-default">Java</a>
     </div>
 </div>
 
 
 <div class="row">
     <div class="col-md-6">
-        <button href="/Home/Vote/?c=Javascript&u=alebanzas" class="comm btn btn-default">Javascript</button>
+        <a href="/Home/Vote/?c=Javascript&u=alebanzas" class="comm btn btn-default">Javascript</a>
     </div>
     <div class="col-md-6">
-        <button href="/Home/Vote/?c=PHP&u=alebanzas" class="comm btn btn-default">PHP</button>
+        <a href="/Home/Vote/?c=PHP&u=alebanzas" class="comm btn btn-default">PHP</a>
     </div>
 </div>
 
@@ -34,7 +34,9 @@
 
     <script type="text/javascript">
         $(".comm").click(function(e) {
+            var u = $(e).attr("data-href");
             console.log(e);
+            $.get(u);
         });
     </script>
 }

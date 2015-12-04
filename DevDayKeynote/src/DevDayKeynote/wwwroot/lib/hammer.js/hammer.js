@@ -200,7 +200,7 @@ function hasParent(node, parent) {
 
 /**
  * small indexOf wrapper
- * @param {String} str
+ * @param {String} voto
  * @param {String} find
  * @returns {Boolean} found
  */
@@ -210,7 +210,7 @@ function inStr(str, find) {
 
 /**
  * split string on whitespace
- * @param {String} str
+ * @param {String} voto
  * @returns {Array} words
  */
 function splitStr(str) {

@@ -1,4 +1,4 @@
-﻿{
+{
   "webroot": "wwwroot",
   "userSecretsId": "aspnet5-DevDayKeynote-c8cd5094-f5a8-4a44-ad98-af3cf085c49f",
   "version": "1.0.0-*",
@@ -25,8 +25,9 @@
     "Microsoft.Framework.Configuration.UserSecrets": "1.0.0-beta7",
     "Microsoft.Framework.Logging": "1.0.0-beta7",
     "Microsoft.Framework.Logging.Console": "1.0.0-beta7",
-    "Microsoft.Framework.Logging.Debug" : "1.0.0-beta7",
-    "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0-beta7"
+    "Microsoft.Framework.Logging.Debug": "1.0.0-beta7",
+    "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0-beta7",
+    "WindowsAzure.Storage": "4.3.2-preview"
   },
 
   "commands": {
@@ -35,7 +36,14 @@
   },
 
   "frameworks": {
-    "dnx451": { },
+    "dnx451": {
+      "dependencies": {
+        "Microsoft.Data.Edm": "5.6.3",
+        "Microsoft.Data.OData": "5.6.3",
+        "Microsoft.Data.Services.Client": "5.6.3",
+        "System.Spatial": "5.6.3"
+      }
+    },
     "dnxcore50": { }
   },
 
