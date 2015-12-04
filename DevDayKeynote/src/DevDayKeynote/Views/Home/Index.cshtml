@@ -22,6 +22,25 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="col-md-6">
+        <button href="/Home/Vote/?c=NET&u=@User.GetUserName()" class="comm btn btn-default">.NET</button>
+    </div>
+    <div class="col-md-6">
+        <button href="/Home/Vote/?c=Java&u=@User.GetUserName()" class="comm btn btn-default">Java</button>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-6">
+        <button href="/Home/Vote/?c=Javascript&u=@User.GetUserName()" class="comm btn btn-default">Javascript</button>
+    </div>
+    <div class="col-md-6">
+        <button href="/Home/Vote/?c=PHP&u=@User.GetUserName()" class="comm btn btn-default">PHP</button>
+    </div>
+</div>
+
 <style>
     .comm {
         width: 100%;
@@ -35,11 +54,13 @@
 {
 
     <script type="text/javascript">
-        $(".comm").click(function() {
+        var clickfunc = function() {
             var u = $(this).attr("href");
             console.log(u);
             $.get(u);
             return false;
-        });
+        };
+        $(".comm").click(clickfunc);
+        $(".comm").on("tap", clickfunc);
     </script>
 }
