@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using DevDayKeynote.Models;
+using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Framework.Configuration;
 using Microsoft.Framework.OptionsModel;
@@ -39,6 +40,12 @@ namespace DevDayKeynote.Controllers
             };
 
             await MessageQueue.AddMessageAsync(voto.AsQueueMessage());
+
+            if (Request.Headers["X-Requested-With"] != null &&
+                !string.IsNullOrWhiteSpace(Request.Headers["X-Requested-With"]))
+            {
+                return new HttpOkResult();
+            }
 
             return RedirectToAction("Index");
         }
