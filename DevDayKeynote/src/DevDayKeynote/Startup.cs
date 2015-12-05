@@ -2,34 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Authentication.Facebook;
-using Microsoft.AspNet.Authentication.Google;
-using Microsoft.AspNet.Authentication.MicrosoftAccount;
-using Microsoft.AspNet.Authentication.Twitter;
 using Microsoft.AspNet.Builder;
-using Microsoft.AspNet.Diagnostics.Entity;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Data.Entity;
-using Microsoft.Dnx.Runtime;
-using Microsoft.Framework.Configuration;
-using Microsoft.Framework.DependencyInjection;
-using Microsoft.Framework.Logging;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using DevDayKeynote.Models;
 using DevDayKeynote.Services;
-using Microsoft.Framework.Configuration.EnvironmentVariables;
+using Microsoft.AspNet.Diagnostics.Entity;
 using Microsoft.WindowsAzure.Storage;
-using LogLevel = Microsoft.Framework.Logging.LogLevel;
+using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace DevDayKeynote
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
+        public Startup(IHostingEnvironment env)
         {
             // Setup configuration sources.
 
-            var builder = new ConfigurationBuilder(appEnv.ApplicationBasePath)
+            var builder = new ConfigurationBuilder()
                 .AddJsonFile("config.json")
                 .AddJsonFile($"config.{env.EnvironmentName}.json", optional: true);
             
@@ -64,22 +58,6 @@ namespace DevDayKeynote
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
             
-            // Configure the options for the authentication middleware.
-            // You can add options for Google, Twitter and other middleware as shown below.
-            // For more information see http://go.microsoft.com/fwlink/?LinkID=532715
-            services.Configure<FacebookAuthenticationOptions>(options =>
-            {
-                options.AppId = Configuration["AppSettings:Authentication:Facebook:AppId"];
-                options.AppSecret = Configuration["AppSettings:Authentication:Facebook:AppSecret"];
-                options.Scope.Add("email");
-            });
-
-            services.Configure<TwitterAuthenticationOptions>(options =>
-            {
-                options.ConsumerKey = Configuration["AppSettings:Authentication:Twitter:ConsumerKey"];
-                options.ConsumerSecret = Configuration["AppSettings:Authentication:Twitter:ConsumerSecret"];
-            });
-
             // Add MVC services to the services container.
             services.AddMvc();
 
@@ -106,14 +84,26 @@ namespace DevDayKeynote
             if (env.IsDevelopment())
             {
                 app.UseBrowserLink();
-                app.UseErrorPage();
-                app.UseDatabaseErrorPage(DatabaseErrorPageOptions.ShowAll);
+                app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
             }
             else
             {
                 // Add Error handling middleware which catches all application specific errors and
                 // sends the request to the following path or controller action.
-                app.UseErrorHandler("/Home/Error");
+                app.UseExceptionHandler("/Home/Error");
+
+                // For more details on creating database during deployment see http://go.microsoft.com/fwlink/?LinkID=615859
+                try
+                {
+                    using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>()
+                        .CreateScope())
+                    {
+                        serviceScope.ServiceProvider.GetService<ApplicationDbContext>()
+                             .Database.Migrate();
+                    }
+                }
+                catch { }
             }
 
             // Add static files to the request pipeline.
@@ -133,10 +123,19 @@ namespace DevDayKeynote
 
             // Add authentication middleware to the request pipeline. You can configure options such as Id and Secret in the ConfigureServices method.
             // For more information see http://go.microsoft.com/fwlink/?LinkID=532715
-            app.UseFacebookAuthentication();
+            app.UseFacebookAuthentication(options =>
+                    {
+                        options.AppId = Configuration["AppSettings:Authentication:Facebook:AppId"];
+                        options.AppSecret = Configuration["AppSettings:Authentication:Facebook:AppSecret"];
+                        options.Scope.Add("email");
+                    });
+            app.UseTwitterAuthentication(options =>
+            {
+                options.ConsumerKey = Configuration["AppSettings:Authentication:Twitter:ConsumerKey"];
+                options.ConsumerSecret = Configuration["AppSettings:Authentication:Twitter:ConsumerSecret"];
+            });
             // app.UseGoogleAuthentication();
             // app.UseMicrosoftAccountAuthentication();
-            app.UseTwitterAuthentication();
 
             // Add MVC to the request pipeline.
             app.UseMvc(routes =>
@@ -149,5 +148,9 @@ namespace DevDayKeynote
                 // routes.MapWebApiRoute("DefaultApi", "api/{controller}/{id?}");
             });
         }
+
+
+        // Entry point for the application.
+        public static void Main(string[] args) => WebApplication.Run<Startup>(args);
     }
 }
