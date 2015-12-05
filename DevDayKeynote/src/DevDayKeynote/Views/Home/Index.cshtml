@@ -22,23 +22,8 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-6">
-        <button href="/Home/Vote/?c=NET&u=@User.GetUserName()" class="comm btn btn-default">.NET</button>
-    </div>
-    <div class="col-md-6">
-        <button href="/Home/Vote/?c=Java&u=@User.GetUserName()" class="comm btn btn-default">Java</button>
-    </div>
-</div>
-
-
-<div class="row">
-    <div class="col-md-6">
-        <button href="/Home/Vote/?c=Javascript&u=@User.GetUserName()" class="comm btn btn-default">Javascript</button>
-    </div>
-    <div class="col-md-6">
-        <button href="/Home/Vote/?c=PHP&u=@User.GetUserName()" class="comm btn btn-default">PHP</button>
-    </div>
+<div id="output">
+    
 </div>
 
 <style>
@@ -54,10 +39,41 @@
 {
 
     <script type="text/javascript">
+        $.fn.nodoubletapzoom = function() {
+            $(this).bind('touchstart', function preventZoom(e){
+                var t2 = e.timeStamp;
+                var t1 = $(this).data('lastTouch') || t2;
+                var dt = t2 - t1;
+                var fingers = e.originalEvent.touches.length;
+                $(this).data('lastTouch', t2);
+                if (!dt || dt > 500 || fingers > 1){
+                    return; // not double-tap
+                }
+                e.preventDefault(); // double tap - prevent the zoom
+                // also synthesize click events we just swallowed up
+                $(e.target).trigger('click');
+            });
+        };
+
+        $(document).ready(function(){
+            $("body").nodoubletapzoom();
+        });
+
+        var i = 0;
+        var output = function(m) {
+            $("#output").append("<p>" + m + "</p>");
+            console.log(m);
+        };
         var clickfunc = function() {
-            var u = $(this).attr("href");
-            console.log(u);
-            $.get(u);
+            var e = $(this);
+            var u = e.attr("href");
+            output(u);
+            $.get(u).done(function () {
+                output("DONE");
+                e.text(i++);
+            }).fail(function(e) {
+                output(e);
+            });
             return false;
         };
         $(".comm").click(clickfunc);

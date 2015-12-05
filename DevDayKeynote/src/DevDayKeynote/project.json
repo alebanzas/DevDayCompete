@@ -27,7 +27,8 @@
     "Microsoft.Framework.Logging.Console": "1.0.0-beta7",
     "Microsoft.Framework.Logging.Debug": "1.0.0-beta7",
     "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0-beta7",
-    "WindowsAzure.Storage": "4.3.2-preview"
+    "Microsoft.AspNet.SignalR.Server": "3.0.0-*",
+    "WindowsAzure.Storage": "6.1.1-preview"
   },
 
   "commands": {
@@ -38,6 +39,7 @@
   "frameworks": {
     "dnx451": {
       "dependencies": {
+        "Microsoft.AspNet.SignalR": "2.2.0",
         "Microsoft.Data.Edm": "5.6.3",
         "Microsoft.Data.OData": "5.6.3",
         "Microsoft.Data.Services.Client": "5.6.3",

@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using DevDayKeynote.Models;
+using DevDayKeynote.Services;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using Microsoft.WindowsAzure.Storage;
@@ -9,13 +10,11 @@ namespace DevDayKeynote.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly CloudQueue MessageQueue;
+        private readonly IVoteLog _voteLogger;
 
-        public HomeController()
+        public HomeController(IVoteLog voteLogger)
         {
-            var cloudStorageAccount = CloudStorageAccount.Parse(Startup.Configuration["AppSettings:StorageConnectionString"]);
-            var createCloudQueueClient = cloudStorageAccount.CreateCloudQueueClient();
-            MessageQueue = createCloudQueueClient.GetQueueReference(typeof(Voto).Name.ToLowerInvariant());
+            _voteLogger = voteLogger;
         }
 
         [Authorize]
@@ -33,23 +32,26 @@ namespace DevDayKeynote.Controllers
         [Authorize]
         public async Task<IActionResult> Vote(string c, string u)
         {
-            var voto = new Voto
-            {
-                Comunidad = c,
-                Usuario = u,
-            };
+            _voteLogger.SendVoteAsync(c, u).RunSynchronously();
+            
 
-            await MessageQueue.AddMessageAsync(voto.AsQueueMessage());
-
-            if (Request.Headers["X-Requested-With"] != null &&
-                !string.IsNullOrWhiteSpace(Request.Headers["X-Requested-With"]))
+            if (!string.IsNullOrWhiteSpace(Request.Headers["X-Requested-With"]))
             {
                 return new HttpOkResult();
             }
 
             return RedirectToAction("Index");
         }
-        
+        public IActionResult Dashboard()
+        {
+            if (!string.IsNullOrWhiteSpace(Request.Headers["X-Requested-With"]))
+            {
+                return new HttpOkResult();
+            }
+
+            return View();
+        }
+
         public IActionResult Error()
         {
             return View("~/Views/Shared/Error.cshtml");

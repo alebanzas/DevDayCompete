@@ -48,6 +48,11 @@ namespace DevDayKeynote
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.AddSignalR(options =>
+            //{
+            //    options.Hubs.EnableDetailedErrors = true;
+            //});
+
             // Add Entity Framework services to the services container.
             services.AddEntityFramework()
                 .AddSqlServer()
@@ -83,6 +88,7 @@ namespace DevDayKeynote
             // services.AddWebApiConventions();
 
             // Register application services.
+            services.AddSingleton<IVoteLog, QueueVoteLog>();
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
         }
@@ -112,6 +118,10 @@ namespace DevDayKeynote
 
             // Add static files to the request pipeline.
             app.UseStaticFiles();
+
+            app.UseFileServer();
+            //app.UseSignalR<RawConnection>("/raw-connection");
+            //app.UseSignalR();
 
             // Add cookie-based authentication to the request pipeline.
             app.UseIdentity();
