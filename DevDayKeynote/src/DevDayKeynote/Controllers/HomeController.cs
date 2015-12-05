@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using DevDayKeynote.Models;
 using DevDayKeynote.Services;
 using Microsoft.AspNet.Authorization;
@@ -46,7 +47,15 @@ namespace DevDayKeynote.Controllers
         {
             if (!string.IsNullOrWhiteSpace(Request.Headers["X-Requested-With"]))
             {
-                return new HttpOkResult();
+                var random = new Random();
+                dynamic result = new {
+                                        Php = random.Next(1, 100000),
+                                        Net = random.Next(1, 100000),
+                                        Java = random.Next(1, 100000),
+                                        Javascript = random.Next(1, 100000),
+                                    };
+
+                return Json(result);
             }
 
             return View();

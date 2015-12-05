@@ -1,17 +1,27 @@
 ﻿@{
     ViewData["Title"] = "Contact";
 }
-<h2>@ViewData["Title"].</h2>
-<h3>@ViewData["Message"]</h3>
+<h2>Dashboard</h2>
 
-<address>
-    One Microsoft Way<br />
-    Redmond, WA 98052-6399<br />
-    <abbr title="Phone">P:</abbr>
-    425.555.0100
-</address>
+<p class="comm php">-</p>
+<p class="comm net">-</p>
+<p class="comm java">-</p>
+<p class="comm javascript">-</p>
 
-<address>
-    <strong>Support:</strong> <a href="mailto:Support@example.com">Support@example.com</a><br />
-    <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
-</address>
+@section scripts
+{
+    <script type="text/javascript">
+
+        var GetDashboard = function() {
+
+            $.get("/Home/Dashboard").done(function(r) {
+                console.log(r);
+            });
+
+        };
+
+        $(document).ready(function() {
+            setInterval(GetDashboard, 500);
+        });
+    </script>
+}
