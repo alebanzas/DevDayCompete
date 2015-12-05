@@ -8,20 +8,39 @@
 <p class="comm java">-</p>
 <p class="comm javascript">-</p>
 
+<button id="status" data-status="0">Start/Stop</button>
+
 @section scripts
 {
     <script type="text/javascript">
 
+        var php = $(".comm.php");
+        var net = $(".comm.net");
+        var java = $(".comm.java");
+        var javascript = $(".comm.javascript");
+        var timer;
+
         var GetDashboard = function() {
 
-            $.get("/Home/Dashboard").done(function(r) {
-                console.log(r);
+            $.get("/Home/Dashboard").done(function (r) {
+                php.text(r.Php);
+                net.text(r.Net);
+                java.text(r.Java);
+                javascript.text(r.Javascript);
             });
 
         };
-
-        $(document).ready(function() {
-            setInterval(GetDashboard, 500);
+        
+        $("#status").click(function() {
+            var t = $(this);
+            console.log(t.attr("data-status"));
+            if (t.attr("data-status") === "0") {
+                t.attr("data-status", "1");
+                timer = setInterval(GetDashboard, 100);
+            } else {
+                t.attr("data-status", "0");
+                clearInterval(timer);
+            }
         });
     </script>
 }

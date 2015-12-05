@@ -14,7 +14,7 @@ namespace DevDayKeynote.Services
 
         public QueueVoteLog()
         {
-            var cloudStorageAccount = CloudStorageAccount.Parse(Startup.Configuration["AppSettings:StorageConnectionString"]);
+            var cloudStorageAccount = CloudStorageAccount.Parse(Startup.Configuration["MicrosoftAzureStorage:devdaydemo_AzureStorageConnectionString"]);
             var createCloudQueueClient = cloudStorageAccount.CreateCloudQueueClient();
             _messageQueue = createCloudQueueClient.GetQueueReference(typeof(Voto).Name.ToLowerInvariant());
         }
