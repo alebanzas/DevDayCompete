@@ -53,3 +53,4 @@ DevDayKeynote/.vs/config/applicationhost.config
 DevDayKeynote/.vs/DevDayKeynote/v14/.suo
 DevDayKeynote/src/DevDayKeynote/Properties/PublishProfiles/devdaydemo-publish.ps1
 *.pubxml
+*.user
