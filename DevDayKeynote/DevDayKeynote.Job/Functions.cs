@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -16,9 +17,13 @@ namespace DevDayKeynote.Job
 
         public static void ProcessQueueMessage([QueueTrigger("voto")] string logMessage, TextWriter logger)
         {
-            var voto = (Voto)JsonConvert.DeserializeObject(logMessage);
+            var voto = JsonConvert.DeserializeObject<Voto>(logMessage);
 
-
+            using (var context = new VotoDbContext())
+            {
+                context.Votos.Add(voto);
+                context.SaveChanges();
+            }
         }
     }
 }

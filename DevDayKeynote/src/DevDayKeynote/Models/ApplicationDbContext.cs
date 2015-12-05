@@ -9,6 +9,8 @@ namespace DevDayKeynote.Models
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        public virtual DbSet<Voto> Votos { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
