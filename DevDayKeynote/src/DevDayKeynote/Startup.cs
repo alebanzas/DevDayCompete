@@ -11,9 +11,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using DevDayKeynote.Models;
 using DevDayKeynote.Services;
-using Microsoft.AspNet.Diagnostics.Entity;
 using Microsoft.WindowsAzure.Storage;
-using LogLevel = Microsoft.Extensions.Logging.LogLevel;
+using Microsoft.WindowsAzure.Storage.Queue;
+using LogLevel = Microsoft.Framework.Logging.LogLevel;
 
 namespace DevDayKeynote
 {
@@ -21,18 +21,17 @@ namespace DevDayKeynote
     {
         public Startup(IHostingEnvironment env)
         {
-            // Setup configuration sources.
-
+            // Set up configuration sources.
             var builder = new ConfigurationBuilder()
-                .AddJsonFile("config.json")
-                .AddJsonFile($"config.{env.EnvironmentName}.json", optional: true);
-            
+                .AddJsonFile("appsettings.json")
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
+
             if (env.IsDevelopment())
             {
-                // This reads the configuration keys from the secret store.
                 // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
                 builder.AddUserSecrets();
             }
+
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
         }
@@ -42,45 +41,30 @@ namespace DevDayKeynote
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddSignalR(options =>
-            //{
-            //    options.Hubs.EnableDetailedErrors = true;
-            //});
-
-            // Add Entity Framework services to the services container.
+            // Add framework services.
             services.AddEntityFramework()
                 .AddSqlServer()
                 .AddDbContext<ApplicationDbContext>(options =>
                     options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
 
-            // Add Identity services to the services container.
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
-            
-            // Add MVC services to the services container.
+
             services.AddMvc();
 
-            // Uncomment the following line to add Web API services which makes it easier to port Web API 2 controllers.
-            // You will also need to add the Microsoft.AspNet.Mvc.WebApiCompatShim package to the 'dependencies' section of project.json.
-            // services.AddWebApiConventions();
-
-            // Register application services.
+            // Add application services.
             services.AddSingleton<IVoteLog, QueueVoteLog>();
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
         }
 
-        // Configure is called after ConfigureServices is called.
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.MinimumLevel = LogLevel.Information;
-            loggerFactory.AddConsole();
+            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            // Configure the HTTP request pipeline.
-
-            // Add the following to the request pipeline only in development environment.
             if (env.IsDevelopment())
             {
                 app.UseBrowserLink();
@@ -89,8 +73,6 @@ namespace DevDayKeynote
             }
             else
             {
-                // Add Error handling middleware which catches all application specific errors and
-                // sends the request to the following path or controller action.
                 app.UseExceptionHandler("/Home/Error");
 
                 // For more details on creating database during deployment see http://go.microsoft.com/fwlink/?LinkID=615859
@@ -106,29 +88,25 @@ namespace DevDayKeynote
                 catch { }
             }
 
-            // Add static files to the request pipeline.
+            app.UseIISPlatformHandler(options => options.AuthenticationDescriptions.Clear());
+
             app.UseStaticFiles();
 
-            app.UseFileServer();
-            //app.UseSignalR<RawConnection>("/raw-connection");
-            //app.UseSignalR();
-
-            // Add cookie-based authentication to the request pipeline.
             app.UseIdentity();
 
-            var cloudStorageAccount = CloudStorageAccount.Parse(Configuration["AppSettings:StorageConnectionString"]);
+            
+            var cloudStorageAccount = CloudStorageAccount.Parse(Configuration["MicrosoftAzureStorage:devdaydemo_AzureStorageConnectionString"]);
             var createCloudQueueClient = cloudStorageAccount.CreateCloudQueueClient();
             var queue = createCloudQueueClient.GetQueueReference(typeof(Voto).Name.ToLowerInvariant());
             queue.CreateIfNotExistsAsync();
 
-            // Add authentication middleware to the request pipeline. You can configure options such as Id and Secret in the ConfigureServices method.
-            // For more information see http://go.microsoft.com/fwlink/?LinkID=532715
+            // To configure external authentication please see http://go.microsoft.com/fwlink/?LinkID=532715
             app.UseFacebookAuthentication(options =>
-                    {
-                        options.AppId = Configuration["AppSettings:Authentication:Facebook:AppId"];
-                        options.AppSecret = Configuration["AppSettings:Authentication:Facebook:AppSecret"];
-                        options.Scope.Add("email");
-                    });
+            {
+                options.AppId = Configuration["AppSettings:Authentication:Facebook:AppId"];
+                options.AppSecret = Configuration["AppSettings:Authentication:Facebook:AppSecret"];
+                options.Scope.Add("email");
+            });
             app.UseTwitterAuthentication(options =>
             {
                 options.ConsumerKey = Configuration["AppSettings:Authentication:Twitter:ConsumerKey"];
@@ -137,18 +115,14 @@ namespace DevDayKeynote
             // app.UseGoogleAuthentication();
             // app.UseMicrosoftAccountAuthentication();
 
-            // Add MVC to the request pipeline.
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
-
-                // Uncomment the following line to add a route for porting Web API 2 controllers.
-                // routes.MapWebApiRoute("DefaultApi", "api/{controller}/{id?}");
             });
         }
-
 
         // Entry point for the application.
         public static void Main(string[] args) => WebApplication.Run<Startup>(args);
