@@ -36,7 +36,7 @@
             console.log(t.attr("data-status"));
             if (t.attr("data-status") === "0") {
                 t.attr("data-status", "1");
-                timer = setInterval(GetDashboard, 100);
+                timer = setInterval(GetDashboard, 200);
             } else {
                 t.attr("data-status", "0");
                 clearInterval(timer);

@@ -61,14 +61,17 @@
 
         var i = 0;
         var output = function(m) {
-            $("#output").append("<p>" + m + "</p>");
+            //$("#output").append("<p>" + m + "</p>");
             console.log(m);
         };
         var clickfunc = function() {
             var e = $(this);
             var u = e.attr("href");
             output(u);
-            $.get(u).done(function () {
+            $.ajax({
+                url: u,
+                cache: false
+            }).done(function () {
                 output("DONE");
                 e.text(i++);
             }).fail(function(e) {

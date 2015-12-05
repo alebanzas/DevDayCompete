@@ -17,4 +17,12 @@ namespace DevDayKeynote.Models
             return new CloudQueueMessage(JsonConvert.SerializeObject(voto));
         }
     }
+
+    public class VotoResult
+    {
+        public int Php { get; set; }
+        public int Net { get; set; }
+        public int Java { get; set; }
+        public int Javascript { get; set; }
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using DevDayKeynote.Models;
 using DevDayKeynote.Services;
@@ -6,16 +7,21 @@ using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
+using Newtonsoft.Json.Converters;
 
 namespace DevDayKeynote.Controllers
 {
     public class HomeController : Controller
     {
+
+        private readonly IVoteGet _voteGetter;
+
         private readonly IVoteLog _voteLogger;
 
-        public HomeController(IVoteLog voteLogger)
+        public HomeController(IVoteLog voteLogger, IVoteGet voteGetter)
         {
             _voteLogger = voteLogger;
+            _voteGetter = voteGetter;
         }
 
         [Authorize]
@@ -33,8 +39,14 @@ namespace DevDayKeynote.Controllers
         [Authorize]
         public async Task<IActionResult> Vote(string c, string u)
         {
-            _voteLogger.SendVoteAsync(c, u).RunSynchronously();
+            var sendVoteAsync = _voteLogger.SendVoteAsync(c, u);
             
+            await sendVoteAsync;
+
+            if (sendVoteAsync.IsCanceled)
+            {
+                var a = "";
+            }
 
             if (!string.IsNullOrWhiteSpace(Request.Headers["X-Requested-With"]))
             {
@@ -43,19 +55,19 @@ namespace DevDayKeynote.Controllers
 
             return RedirectToAction("Index");
         }
-        public IActionResult Dashboard()
+        public async Task<IActionResult> Dashboard()
         {
             if (!string.IsNullOrWhiteSpace(Request.Headers["X-Requested-With"]))
             {
-                var random = new Random();
-                dynamic result = new {
-                                        Php = random.Next(1, 100000),
-                                        Net = random.Next(1, 100000),
-                                        Java = random.Next(1, 100000),
-                                        Javascript = random.Next(1, 100000),
-                                    };
-
-                return Json(result);
+                var result = await _voteGetter.GetVoteAsync();
+                
+                return Json(new
+                {
+                    Php = result.Php,
+                    Java = result.Java,
+                    Javascript = result.Javascript,
+                    Net = result.Net,
+                });
             }
 
             return View();

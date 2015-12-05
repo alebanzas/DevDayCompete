@@ -54,7 +54,11 @@ namespace DevDayKeynote
             services.AddMvc();
 
             // Add application services.
-            services.AddSingleton<IVoteLog, QueueVoteLog>();
+            services.AddSingleton<IVoteLog, CacheVoteGetter>();
+            services.AddSingleton<IVoteGet, CacheVoteGetter>();
+
+            //services.AddSingleton<IVoteLog, QueueVoteLog>();
+
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
         }

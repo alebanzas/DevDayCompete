@@ -54,3 +54,5 @@ DevDayKeynote/.vs/DevDayKeynote/v14/.suo
 DevDayKeynote/src/DevDayKeynote/Properties/PublishProfiles/devdaydemo-publish.ps1
 *.pubxml
 *.user
+DevDayKeynote/src/DevDayKeynote/DevDayKeynote.xproj.user
+DevDayKeynote/.vs/DevDayKeynote/v14/.suo
