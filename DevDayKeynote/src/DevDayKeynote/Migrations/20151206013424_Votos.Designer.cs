@@ -8,7 +8,7 @@ using DevDayKeynote.Models;
 namespace DevDayKeynote.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20151205204038_Votos")]
+    [Migration("20151206013424_Votos")]
     partial class Votos
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -75,6 +75,8 @@ namespace DevDayKeynote.Migrations
                     b.Property<string>("Usuario");
 
                     b.HasKey("Id");
+
+                    b.HasAnnotation("Relational:TableName", "Votos");
                 });
 
             modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityRole", b =>

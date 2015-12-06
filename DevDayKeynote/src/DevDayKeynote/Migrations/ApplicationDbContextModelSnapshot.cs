@@ -74,6 +74,8 @@ namespace DevDayKeynote.Migrations
                     b.Property<string>("Usuario");
 
                     b.HasKey("Id");
+
+                    b.HasAnnotation("Relational:TableName", "Votos");
                 });
 
             modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityRole", b =>

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Data.Entity.Migrations;
-using Microsoft.Data.Entity.Metadata;
 
 namespace DevDayKeynote.Migrations
 {
@@ -14,31 +13,6 @@ namespace DevDayKeynote.Migrations
             migrationBuilder.DropForeignKey(name: "FK_IdentityUserLogin<string>_ApplicationUser_UserId", table: "AspNetUserLogins");
             migrationBuilder.DropForeignKey(name: "FK_IdentityUserRole<string>_IdentityRole_RoleId", table: "AspNetUserRoles");
             migrationBuilder.DropForeignKey(name: "FK_IdentityUserRole<string>_ApplicationUser_UserId", table: "AspNetUserRoles");
-            migrationBuilder.CreateTable(
-                name: "Voto",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Comunidad = table.Column<string>(nullable: true),
-                    Usuario = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Voto", x => x.Id);
-                });
-            migrationBuilder.AlterColumn<string>(
-                name: "UserId",
-                table: "AspNetUserLogins",
-                nullable: false);
-            migrationBuilder.AlterColumn<string>(
-                name: "UserId",
-                table: "AspNetUserClaims",
-                nullable: false);
-            migrationBuilder.AlterColumn<string>(
-                name: "RoleId",
-                table: "AspNetRoleClaims",
-                nullable: false);
             migrationBuilder.AddForeignKey(
                 name: "FK_IdentityRoleClaim<string>_IdentityRole_RoleId",
                 table: "AspNetRoleClaims",
@@ -74,6 +48,9 @@ namespace DevDayKeynote.Migrations
                 principalTable: "AspNetUsers",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
+            migrationBuilder.RenameTable(
+                name: "Voto",
+                newName: "Votos");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -83,19 +60,6 @@ namespace DevDayKeynote.Migrations
             migrationBuilder.DropForeignKey(name: "FK_IdentityUserLogin<string>_ApplicationUser_UserId", table: "AspNetUserLogins");
             migrationBuilder.DropForeignKey(name: "FK_IdentityUserRole<string>_IdentityRole_RoleId", table: "AspNetUserRoles");
             migrationBuilder.DropForeignKey(name: "FK_IdentityUserRole<string>_ApplicationUser_UserId", table: "AspNetUserRoles");
-            migrationBuilder.DropTable("Voto");
-            migrationBuilder.AlterColumn<string>(
-                name: "UserId",
-                table: "AspNetUserLogins",
-                nullable: true);
-            migrationBuilder.AlterColumn<string>(
-                name: "UserId",
-                table: "AspNetUserClaims",
-                nullable: true);
-            migrationBuilder.AlterColumn<string>(
-                name: "RoleId",
-                table: "AspNetRoleClaims",
-                nullable: true);
             migrationBuilder.AddForeignKey(
                 name: "FK_IdentityRoleClaim<string>_IdentityRole_RoleId",
                 table: "AspNetRoleClaims",
@@ -131,6 +95,9 @@ namespace DevDayKeynote.Migrations
                 principalTable: "AspNetUsers",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);
+            migrationBuilder.RenameTable(
+                name: "Votos",
+                newName: "Voto");
         }
     }
 }

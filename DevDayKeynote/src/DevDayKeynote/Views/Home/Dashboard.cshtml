@@ -1,17 +1,16 @@
-﻿@{
+﻿@model VotoResult
+@{
     ViewData["Title"] = "Contact";
 }
 <h2>Dashboard</h2>
 
-<p class="comm php">-</p>
-<p class="comm net">-</p>
-<p class="comm java">-</p>
-<p class="comm javascript">-</p>
+<canvas id="chart-area" style="width: 60%; height: 300px;"></canvas>
 
 <button id="status" data-status="0">Start/Stop</button>
 
 @section scripts
 {
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
     <script type="text/javascript">
 
         var php = $(".comm.php");
@@ -22,7 +21,11 @@
 
         var GetDashboard = function() {
 
-            $.get("/Home/Dashboard").done(function (r) {
+            $.ajax({
+                url: "/Home/Dashboard",
+                cache: false
+            }).done(function(r) {
+                loadData(r.Php, r.Java, r.Javascript, r.Net);
                 php.text(r.Php);
                 net.text(r.Net);
                 java.text(r.Java);
@@ -30,7 +33,7 @@
             });
 
         };
-        
+
         $("#status").click(function() {
             var t = $(this);
             console.log(t.attr("data-status"));
@@ -41,6 +44,57 @@
                 t.attr("data-status", "0");
                 clearInterval(timer);
             }
+        });
+
+        var loadFirstData = function(a, b, c, d) {
+            var data = [
+                {
+                    value: a,
+                    color: "#F7464A",
+                    highlight: "#FF5A5E",
+                    label: "PHP"
+                },
+                {
+                    value: b,
+                    color: "#46BFBD",
+                    highlight: "#5AD3D1",
+                    label: "Java"
+                },
+                {
+                    value: c,
+                    color: "#FDB45C",
+                    highlight: "#FFC870",
+                    label: "Javascript"
+                },
+                {
+                    value: d,
+                    color: "#949FB1",
+                    highlight: "#A8B3C5",
+                    label: ".NET"
+                }
+            ];
+
+            var ctx = document.getElementById("chart-area").getContext("2d");
+            window.myPolarArea = new Chart(ctx).PolarArea(data, {
+                responsive: true
+            });
+        }
+
+        var loadData = function(a, b, c, d) {
+            if (window.myPolarArea.segments[0].value !== a ||
+                    window.myPolarArea.segments[1].value !==  b ||
+                    window.myPolarArea.segments[2].value !==  c ||
+                    window.myPolarArea.segments[3].value !==  d) {
+                window.myPolarArea.segments[0].value = a;
+                window.myPolarArea.segments[1].value = b;
+                window.myPolarArea.segments[2].value = c;
+                window.myPolarArea.segments[3].value = d;
+                window.myPolarArea.update();
+            }
+        }
+
+        $(document).ready(function() {
+            loadFirstData(@Model.Php, @Model.Java, @Model.Javascript, @Model.Net);
         });
     </script>
 }

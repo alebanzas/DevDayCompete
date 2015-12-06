@@ -1,8 +1,10 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Newtonsoft.Json;
 
 namespace DevDayKeynote.Models
 {
+    [Table("Votos")]
     public class Voto
     {
         public int Id { get; set; }

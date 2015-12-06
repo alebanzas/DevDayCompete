@@ -18,10 +18,16 @@ namespace DevDayKeynote.Job
         public static void ProcessQueueMessage([QueueTrigger("voto")] string logMessage, TextWriter logger)
         {
             var voto = JsonConvert.DeserializeObject<Voto>(logMessage);
-
+            
             using (var context = new VotoDbContext())
             {
-                context.Votos.Add(voto);
+                context.Database.Log = Console.WriteLine;
+                context.Votos.Add(new Voto
+                {
+                    Usuario = voto.Usuario,
+                    Comunidad = voto.Comunidad,
+                    Id = voto.Id,
+                });
                 context.SaveChanges();
             }
         }

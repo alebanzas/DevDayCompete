@@ -57,10 +57,10 @@ namespace DevDayKeynote.Controllers
         }
         public async Task<IActionResult> Dashboard()
         {
+            var result = await _voteGetter.GetVoteAsync();
+
             if (!string.IsNullOrWhiteSpace(Request.Headers["X-Requested-With"]))
             {
-                var result = await _voteGetter.GetVoteAsync();
-                
                 return Json(new
                 {
                     Php = result.Php,
@@ -70,7 +70,7 @@ namespace DevDayKeynote.Controllers
                 });
             }
 
-            return View();
+            return View(result);
         }
 
         public IActionResult Error()
