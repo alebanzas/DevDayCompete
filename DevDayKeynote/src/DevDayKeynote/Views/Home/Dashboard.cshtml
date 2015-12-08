@@ -6,7 +6,8 @@
 
 <canvas id="chart-area" style="width: 60%; height: 300px;"></canvas>
 
-<button id="status" data-status="0">Start/Stop</button>
+<button id="status" data-status="0" class="btn-danger">Start/Stop</button>
+
 
 @section scripts
 {
@@ -20,7 +21,7 @@
                 url: "/Home/Dashboard",
                 cache: false
             }).done(function(r) {
-                loadData(r.Php, r.Java, r.Net, r.Javascript);
+                loadData(r.Java, r.Javascript, r.Net, r.Php);
             });
 
         };
@@ -29,27 +30,28 @@
             var t = $(this);
             console.log(t.attr("data-status"));
             if (t.attr("data-status") === "0") {
-                t.attr("data-status", "1");
+                t.attr("data-status", "1").addClass("btn-success").removeClass("btn-danger");
                 timer = setInterval(GetDashboard, 200);
             } else {
-                t.attr("data-status", "0");
+                t.attr("data-status", "0").addClass("btn-danger").removeClass("btn-success");
                 clearInterval(timer);
             }
         });
 
         var loadFirstData = function(a, b, c, d) {
             var data = [
+
                 {
                     value: a,
-                    color: "#D9534F",
-                    highlight: "#C9302C",
-                    label: "PHP"
-                },
-                {
-                    value: b,
                     color: "#5CB85C",
                     highlight: "#449D44",
                     label: "Java"
+                },
+                {
+                    value: b,
+                    color: "#F0AD4E",
+                    highlight: "#EC971F",
+                    label: "Javascript"
                 },
                 {
                     value: c,
@@ -59,9 +61,9 @@
                 },
                 {
                     value: d,
-                    color: "#F0AD4E",
-                    highlight: "#EC971F",
-                    label: "Javascript"
+                    color: "#D9534F",
+                    highlight: "#C9302C",
+                    label: "PHP"
                 }
             ];
 
@@ -85,7 +87,7 @@
         }
 
         $(document).ready(function() {
-            loadFirstData(@Model.Php, @Model.Java, @Model.Net, @Model.Javascript);
+            loadFirstData(@Model.Java, @Model.Javascript, @Model.Net, @Model.Php);
         });
     </script>
 }
